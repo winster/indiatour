@@ -1,6 +1,6 @@
 {
     "appSecret": "ec67bbdb7c787f52d6cd502c6cd92fe7",
-    "pageAccessToken": "EAAaRv4ZCcoPMBAADx5Iu22zoJ2Bzma1VqYCnicne6Ys6N83F1s4ymfuFiFRftPzpc7Ri51Uop5pZCDWppeTktdJQ3eOUIzJtdv2CpJQ3EEzny2nBcRCIciHGDGbchADVTJP2GodQ5WbEipLMGQKOVleyt0GLIZCpZCOumZCWoGQZDZD",
+    "pageAccessToken": "EAACAmaryRi0BAIL84t8cbW5ZCPoZCSZCF12EsftQmnBXsl8ZBZAtB9zuR6noItq5bSPZCE6TriWVEb1Pwnwh4gZB6HIgM9g5xkuakuDj0e2drq77xd4H5Y04jqqc2hFNa2AVNI4Eeb4ql525rZCdDCftD9UrSPSZA7x745dJKfcQY6gZDZD",
     "validationToken": "winster_jose_is_the_master_of_bots",
     "serverURL": "https://stayahead.herokuapp.com/",
     "database": "postgres://postgres:postgres@localhost:5432/postgres",
