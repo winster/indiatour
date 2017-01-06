@@ -1,0 +1,26 @@
+{
+  "name": "xmpp",
+  "version": "1.0.0",
+  "description": "xmpp server",
+  "main": "app.js",
+  "dependencies": {
+    "node-gcm-ccs": "https://github.com/jacobp100/node-gcm-ccs.git",
+    "express": "*",
+    "body-parser": "*",
+    "ws": "*",
+    "socket.io": "1.4.6",
+    "config": "^1.20.4",
+    "shortid": "*",
+    "pg" : "*",
+    "pg-hstore" : "*",
+    "sequelize" : "*",
+    "request": "^2.72.0",
+    "node-wit" : "*"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "winster",
+  "license": "ISC"
+}
