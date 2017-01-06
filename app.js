@@ -13,7 +13,7 @@ const express = require('express'),
     request = require('request'),
     Wit = require('node-wit').Wit,
     log = require('node-wit').log,
-    Firebase = require("firebase"),
+    firebase = require('firebase-admin'),
     Q = require("q");
 
 
@@ -41,12 +41,18 @@ gcm.on('message-error', function(message){console.log('message-error::', message
 
 
 
-var ref = new Firebase('https://indiatour-805b8.firebaseio.com/');
-var profilesRef = ref.child("profiles");
-var queueRef = ref.child("queue/");
-var passRef = ref.child("queue/passCount");
-var regRef = ref.child("queue/regCount");
-var promoRef = ref.child("promo/");
+var serviceAccount = require("serviceAccountKey.json");
+
+firebase.initializeApp({
+  credential: firebase.credential.cert(serviceAccount),
+  databaseURL: 'https://indiatour-805b8.firebaseio.com'
+});
+
+var profilesRef = firebase.database().ref("/profiles");
+var queueRef = firebase.database().ref("/queue/");
+var passRef = firebase.database().ref("/queue/passCount");
+var regRef = firebase.database().ref("/queue/regCount");
+var promoRef = firebase.database().ref("/promo/");
 
 /*
  * Be sure to setup your config values before running this code. You can 
