@@ -1264,6 +1264,7 @@ app.post('/notify', function(request, response) {
 });
 
 app.post('/initqueue', function(request, response) {
+  console.log('inside initqueue');
   var req = request.body;
   queueRef.once('value', function(snapshot){
     var queue = snapshot.val();
