@@ -41,7 +41,7 @@ gcm.on('message-error', function(message){console.log('message-error::', message
 
 
 
-var serviceAccount = require("serviceAccountKey.json");
+var serviceAccount = require("./serviceAccountKey.json");
 
 firebase.initializeApp({
   credential: firebase.credential.cert(serviceAccount),
