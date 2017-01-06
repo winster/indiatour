@@ -12,7 +12,9 @@ const express = require('express'),
     config = require('config'),
     request = require('request'),
     Wit = require('node-wit').Wit,
-    log = require('node-wit').log;
+    log = require('node-wit').log,
+    Firebase = require("firebase"),
+    Q = require("q");
 
 
 var app = express();
@@ -37,6 +39,14 @@ gcm.on('online', function(){console.log('online')});
 gcm.on('error', function(){console.log('error')});
 gcm.on('message-error', function(message){console.log('message-error::', message)});
 
+
+
+var ref = new Firebase('https://indiatour-805b8.firebaseio.com/');
+var profilesRef = ref.child("profiles");
+var queueRef = ref.child("queue/");
+var passRef = ref.child("queue/passCount");
+var regRef = ref.child("queue/regCount");
+var promoRef = ref.child("promo/");
 
 /*
  * Be sure to setup your config values before running this code. You can 
@@ -95,10 +105,12 @@ server.listen(process.env.PORT || 5000, function () {
 });
 
 var clients = {}
+var websocket;
 
 wss.on("connection", function(ws) {
     var connection_id = shortid.generate();
     clients[connection_id] = ws;
+    websocket = ws;
     ws.connection_id = connection_id;
     console.log("websocket connection open");
     var result = {'status':'connected','connection_id': connection_id}
@@ -1164,6 +1176,159 @@ app.post('/v1.0/offline', function(req, res) {
 
       })
 });
+
+
+
+---------------------------------------------------------------------------------------------------------------
+
+
+passRef.on('value', function(snapshot){
+  var passCount = snapshot.val();
+  profilesRef.orderByChild("token").startAt(passCount).endAt(passCount+3).on("value", function(snapshot) {
+    var regids = [];
+    snapshot.forEach(function(data) {
+      console.log(data.key() + " :: " + data.val());
+      var profile = data.val();
+      regids.push(profile.regId);  
+    });
+    var message = new gcm.Message();
+    message.addData('data', passCount);
+    sendnotifs(message, regids); 
+  });
+});
+regRef.on('value', function(snapshot){
+  console.log('reg count listener');
+});
+
+app.post('/register', function(request, response) {
+  var result={};
+  var req = request.body;
+  console.log(req);
+  if(!req.name) {
+    response.send({'result':'invalid input'});
+    return;
+  }
+  var endpointParts=req.endpoint.split('/');
+  var registrationId = endpointParts[endpointParts.length - 1];  
+  req.regId = registrationId;
+  var profileRef = profilesRef.child(req.name);
+
+  broadcastAds();
+
+  queueRef.once('value', function(snapshot){
+    var queue = snapshot.val();
+    profileRef.once('value', function(snapshot){
+      var profile = snapshot.val();
+      if(!profile) {
+        queue.regCount += 1;
+        req.token = queue.regCount;
+        profileRef.set(req);
+        queueRef.set(queue);
+        result.token = queue.regCount;
+        result.pass = queue.passCount;
+        result.time = queue.avgTime;
+        response.send({'result':result});
+      } else{
+        result.token = profile.token; 
+        result.pass = queue.passCount;
+        result.time = queue.avgTime;
+        response.send({'result':result});
+      }
+    });
+  });
+});
+
+app.post('/unregister', function(request, response) {
+  var req = request.body;
+  console.log(req);
+  var endpointParts=req.endpoint.split('/');
+  var registrationId = endpointParts[endpointParts.length - 1];  
+  req.regId = registrationId;  
+  queueRef.once('value', function(snapshot){
+    var queue = snapshot.val();
+    queue.passCount += 1;
+    queueRef.set(queue);        
+  });
+  profilesRef.once('value', function(snapshot){
+    var profiles = snapshot.val();
+    delete profiles[req.name];
+    profilesRef.set(profiles);
+  });  
+  response.send({'result':'success'});
+});
+
+app.post('/notify', function(request, response) {
+  var message = new gcm.Message();
+  message.addData('key1', 'msg1');
+  sendnotifs(message);
+});
+
+app.post('/initqueue', function(request, response) {
+  var req = request.body;
+  queueRef.once('value', function(snapshot){
+    var queue = snapshot.val();
+    queue.passCount = req.passCount;
+    queue.regCount = req.regCount;
+    queue.avgTime = req.avgTime;
+    queueRef.set(queue);        
+    response.send('updated');
+    broadcast(queue);
+  });
+});
+
+app.post('/exit', function(request, response) {
+  queueRef.once('value', function(snapshot){
+    var queue = snapshot.val();
+    queue.passCount += 1;
+    queueRef.set(queue);     
+    broadcast(queue);
+  });  
+  response.send('updated');
+  console.log('queue updated');
+});
+
+app.get('/token', function(request, response) {
+  getQueueData()
+  .then(function(count){
+    response.send(''+count);
+  });
+});
+
+var getQueueData = function(){
+  var q = Q.defer();
+  queueRef.once('value', function(snapshot){
+    var queue = snapshot.val();
+    q.resolve(queue.passCount);  
+  });
+  return q.promise;
+};
+
+var sendnotifs = function(message, regids){
+  gcm.send(message, { registrationTokens: regids }, function (err, res) {
+    if(err) 
+      console.error(err);
+    else    
+      console.log(res);
+    console.log('notifications sent to '+regids);
+  });    
+}
+
+var broadcast=function(queue){
+  debugger;
+  var data = {pass:queue.passCount, time:queue.avgTime};
+  if(websocket)
+  websocket.send(JSON.stringify(data), function() {});
+}
+
+var broadcastAds = function(){
+  debugger;
+  promoRef.once('value', function(snapshot){
+    var promos = snapshot.val();
+    var result = {promo: promos};
+    if(websocket)
+    websocket.send(JSON.stringify(result), function() {  });
+  });  
+}
 
 
 exports = module.exports = app;

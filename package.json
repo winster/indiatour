@@ -15,7 +15,9 @@
     "pg-hstore" : "*",
     "sequelize" : "*",
     "request": "^2.72.0",
-    "node-wit" : "*"
+    "node-wit" : "*",
+    "firebase":"*",
+    "q":"*",
   },
   "devDependencies": {},
   "scripts": {
