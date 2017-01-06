@@ -14,7 +14,7 @@
         "src": "images/touch/chrome-touch-icon-192x192.png",
         "sizes": "192x192"
       }],
-  "start_url": "./index.html?homescreen=1",
+  "start_url": "/vqms/index.html?homescreen=1",
   "display": "standalone",
   "gcm_sender_id": "363651967593"
 }

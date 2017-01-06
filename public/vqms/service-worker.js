@@ -31,7 +31,7 @@ self.addEventListener('notificationclick', function(event) {
         return client.focus();
     }
     if (clients.openWindow)      
-      var url = '/index.html?rank=2';    
+      var url = '/vqms/index.html?rank=2';    
       return clients.openWindow(url);
   }));
 });
