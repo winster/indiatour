@@ -4,7 +4,7 @@ const express = require('express'),
     https = require('https'),
     http = require('http'),    
     bodyParser = require('body-parser'),
-    GCM = require('node-gcm-ccs'),
+    gcm = require('node-gcm'),
     WebSocketServer = require("ws").Server,
     shortid = require('shortid'),
     Sequelize = require('sequelize'),
@@ -22,9 +22,10 @@ app.set('port', process.env.PORT || 5000);
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 
-var gcm = GCM('363651967593', 'AIzaSyCfYqVxRG0oz7Xo_jgRcXJk54t-XXhATGs');
+//var gcm = GCM('363651967593', 'AIzaSyCfYqVxRG0oz7Xo_jgRcXJk54t-XXhATGs');
+var sender = new gcm.Sender('AIzaSyCfYqVxRG0oz7Xo_jgRcXJk54t-XXhATGs');
  
-gcm.on('message', function(messageId, from, category, data) {
+/*gcm.on('message', function(messageId, from, category, data) {
     console.log('message received::'+JSON.stringify(data))
     //Using Websocket instead of this event
 });
@@ -38,7 +39,7 @@ gcm.on('disconnected', function(){console.log('disconnected')});
 gcm.on('online', function(){console.log('online')});
 gcm.on('error', function(){console.log('error')});
 gcm.on('message-error', function(message){console.log('message-error::', message)});
-
+*/
 
 
 var serviceAccount = require("./serviceAccountKey.json");
@@ -957,10 +958,14 @@ function sendAppMessage(message) {
                 console.error('no ws connection found')
             }
         } 
+        var messagePayload = new gcm.Message({
+          data: payload
+        });
+        var registrationTokens = [user.token];
         if(useGCM) {
-            gcm.send(user.token, payload, { delivery_receipt_requested: true }, (err, messageId, to) => {
+            sender.send(messagePayload,{ registrationTokens: regTokens }, (err, response) => {
                 if (!err) {
-                    console.log('sent message to', to, 'with message_id =', messageId);
+                    console.log('sent message ',response);
                 } else {
                     console.log('failed to send message');
                 }
@@ -1311,7 +1316,7 @@ var getQueueData = function(){
 };
 
 var sendnotifs = function(message, regids){
-  gcm.send(message, { registrationTokens: regids }, function (err, res) {
+  sender.send(message, { registrationTokens: regids }, function (err, res) {
     if(err) 
       console.error(err);
     else    
