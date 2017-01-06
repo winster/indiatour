@@ -393,7 +393,7 @@ function receivedMessage(event) {
       default:
         forwardTextMessage(senderID, messageText);
     }*/
-    if(messageText.indexOf('room pics')>-1 || messageText.indexOf('hotel pics')>-1) {
+    if(messageText.indexOf('Hampi pics')>-1 || messageText.indexOf('Pictures of Hampi')>-1) {
         sendGenericMessage(senderID);
     } else {
         forwardTextMessage(senderID, messageText);
@@ -671,31 +671,31 @@ function sendGenericMessage(recipientId) {
         payload: {
           template_type: "generic",
           elements: [{
-            title: "Deluxe",
-            subtitle: "Room Type : Luxury Deluxe Room",
-            item_url: "https://www.roomstonite.com/#/property-detail/W9MjqNxHSmeO6EgXYLo9c3WtQrnUJ-7J9l0guCohATVnE2WCSsEs82pPeeUjO95jGdMZGB55xT2jFbHA9YGkCeW759EWnqBpx+lD-dHrOauNL0-tKrlW2p+b+tLdYLm7Rn9bNw1A6Dg=",               
-            image_url: SERVER_URL + "/assets/room1.jpg",
+            title: "Virupaksha",
+            subtitle: "Virupaksha Temple",
+            item_url: "https://indiatour.herokuapp.com/hampi/virupaksha",               
+            image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Virupaksha_Temple_from_the_top.JPG/480px-Virupaksha_Temple_from_the_top.JPG",
             buttons: [{
               type: "web_url",
-              url: "https://www.roomstonite.com/#/property-detail/W9MjqNxHSmeO6EgXYLo9c3WtQrnUJ-7J9l0guCohATVnE2WCSsEs82pPeeUjO95jGdMZGB55xT2jFbHA9YGkCeW759EWnqBpx+lD-dHrOauNL0-tKrlW2p+b+tLdYLm7Rn9bNw1A6Dg=",
-              title: "Visti Website"
+              url: "https://indiatour.herokuapp.com/hampi/virupaksha/visitinghours",
+              title: "Visiting Hours"
             }, {
               type: "postback",
-              title: "Call Hotel",
+              title: "Book a Hotel",
               payload: "Payload for first bubble",
             }],
           }, {
-            title: "Comfort",
-            subtitle: "Room Type : Deluxe Suite",
-            item_url: "https://www.roomstonite.com/#/property-detail/IN8iFfRlFDTxLHqVX6hO6a9BYtBqY9qX1tmTWAN6VA9PPrJIj6XRXVJ57SEX6LuWk0EkKsOo5FMqmyy1RzvpPPzS6TajILfGushtdDsE8JurOgu3e9Ix73AYiVRipNPaRn9bNw1A6Dg=",               
-            image_url: SERVER_URL + "/assets/room2.jpg",
+            title: "Vittala",
+            subtitle: "Stone Chariot in Vittala",
+            item_url: "https://indiatour.herokuapp.com/hampi/vittala",
+            image_url: "https://media-cdn.tripadvisor.com/media/photo-s/05/b5/1d/b6/explore-hampi-day-tours.jpg",
             buttons: [{
               type: "web_url",
-              url: "https://www.roomstonite.com/#/property-detail/IN8iFfRlFDTxLHqVX6hO6a9BYtBqY9qX1tmTWAN6VA9PPrJIj6XRXVJ57SEX6LuWk0EkKsOo5FMqmyy1RzvpPPzS6TajILfGushtdDsE8JurOgu3e9Ix73AYiVRipNPaRn9bNw1A6Dg=",
-              title: "Visit Website"
+              url: "https://indiatour.herokuapp.com/hampi/vittala/visitinghours",
+              title: "Visiting hours"
             }, {
               type: "postback",
-              title: "Call Hotel",
+              title: "Book a guide",
               payload: "Payload for second bubble",
             }]
           }]
