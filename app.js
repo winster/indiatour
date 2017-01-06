@@ -1198,7 +1198,7 @@ passRef.on('value', function(snapshot){
   profilesRef.orderByChild("token").startAt(passCount).endAt(passCount+3).on("value", function(snapshot) {
     var regids = [];
     snapshot.forEach(function(data) {
-      console.log(data.key() + " :: " + data.val());
+      console.log("value from firebase:: " + data.val());
       var profile = data.val();
       regids.push(profile.regId);  
     });
