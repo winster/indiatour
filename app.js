@@ -414,6 +414,8 @@ function receivedMessage(event) {
     }*/
     if(messageText.indexOf('Hampi pics')>-1 || messageText.indexOf('Pictures of Hampi')>-1) {
         sendGenericMessage(senderID);
+    } else if(messageText.indexOf('audio guide')>-1){
+        sendAudioMessage(senderID);
     } else {
         forwardTextMessage(senderID, messageText);
     }
@@ -745,6 +747,40 @@ function sendRestaurants(recipientId) {
               type: "web_url",
               url: "https://indiatour.herokuapp.com/restaurant/a2b",
               title: "More Images"
+            }, {
+              type: "postback",
+              title: "Reviews",
+              payload: "Payload for first bubble",
+            }],
+          }]
+        }
+      }
+    }
+  };  
+
+  callSendAPI(messageData);
+}
+
+
+function sendGuide(recipientId) {
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      attachment: {
+        type: "template",
+        payload: {
+          template_type: "generic",
+          elements: [{
+            title: "Mr. Mohan",
+            subtitle: "10 year experienced",
+            item_url: "https://indiatour.herokuapp.com/restaurant/a2b",               
+            image_url: "http://www.hit4hit.org/img/login/user-icon-6.png",
+            buttons: [{
+              type: "web_url",
+              url: "https://indiatour.herokuapp.com/restaurant/a2b",
+              title: "Call and book"
             }, {
               type: "postback",
               title: "Reviews",
@@ -1094,6 +1130,8 @@ const actions = {
       // We return a promise to let our bot know when we're done sending
       if(text.indexOf('restaurant')>-1) {
           sendRestaurants(recipientId);
+      } else if(text.indexOf('guide')>-1) {
+          sendGuide(recipientId);
       } else {
           sendFBTextMessage(recipientId, text);
       } 
@@ -1124,14 +1162,27 @@ const actions = {
   getRestaurants({context, entities}) {
     console.log('inside getRestaurants action');
     return new Promise(function(resolve, reject) {
-      var origin = firstEntityValue(entities, 'origin')
-      var destination = firstEntityValue(entities, 'destination')
-      if (destination && origin) {
-        context.restaurants = 'A2B restaurant from '+origin+' to '+destination; // we should call a Google places API here
+      var location = firstEntityValue(entities, 'location')
+      if (location) {
+        context.restaurants = 'A2B restaurant'; // we should call a Google places API here
         delete context.missingLocation;
       } else {
         context.missingLocation = true;
         delete context.restaurants;
+      }
+      return resolve(context);
+    });
+  },
+  getGuides({context, entities}) {
+    console.log('inside getGuides action');
+    return new Promise(function(resolve, reject) {
+      var location = firstEntityValue(entities, 'location')
+      if (location) {
+        context.guidelist = 'Sasi guide '; // we should call a Google places API here
+        delete context.missingLocation;
+      } else {
+        context.missingLocation = true;
+        delete context.guidelist;
       }
       return resolve(context);
     });
