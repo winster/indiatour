@@ -1083,6 +1083,21 @@ const actions = {
       }
       return resolve(context);
     });
+  },
+  getRestaurants({context, entities}) {
+    console.log('inside getRestaurants action');
+    return new Promise(function(resolve, reject) {
+      var origin = firstEntityValue(entities, 'origin')
+      var location = firstEntityValue(entities, 'origin')
+      if (location && origin) {
+        context.searchresults = 'A2B from '+origin+' to '+location; // we should call a Google places API here
+        delete context.missingLocation;
+      } else {
+        context.missingLocation = true;
+        delete context.searchresults;
+      }
+      return resolve(context);
+    });
   }
   // You should implement your custom actions here
   // See https://wit.ai/docs/quickstart
