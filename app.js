@@ -1089,7 +1089,7 @@ const actions = {
     return new Promise(function(resolve, reject) {
       var origin = firstEntityValue(entities, 'origin')
       var destination = firstEntityValue(entities, 'destination')
-      if (location && origin) {
+      if (destination && origin) {
         context.restaurants = 'A2B from '+origin+' to '+destination; // we should call a Google places API here
         delete context.missingLocation;
       } else {
