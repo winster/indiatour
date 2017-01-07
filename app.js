@@ -1092,7 +1092,7 @@ const actions = {
       // Yay, we found our recipient!
       // Let's forward our bot response to her.
       // We return a promise to let our bot know when we're done sending
-      if(text.indexOf('restaurant')) {
+      if(text.indexOf('restaurant')>-1) {
           sendRestaurants(recipientId);
       } else {
           sendFBTextMessage(recipientId, text);
