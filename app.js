@@ -1088,13 +1088,13 @@ const actions = {
     console.log('inside getRestaurants action');
     return new Promise(function(resolve, reject) {
       var origin = firstEntityValue(entities, 'origin')
-      var location = firstEntityValue(entities, 'origin')
+      var destination = firstEntityValue(entities, 'destination')
       if (location && origin) {
-        context.searchresults = 'A2B from '+origin+' to '+location; // we should call a Google places API here
+        context.restaurants = 'A2B from '+origin+' to '+location; // we should call a Google places API here
         delete context.missingLocation;
       } else {
         context.missingLocation = true;
-        delete context.searchresults;
+        delete context.restaurants;
       }
       return resolve(context);
     });
