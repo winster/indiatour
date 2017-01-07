@@ -1,7 +1,7 @@
 {
   "name": "xmpp",
   "version": "1.0.0",
-  "description": "xmpp server",
+  "description": "india tour server",
   "main": "app.js",
   "dependencies": {
     "node-gcm": "*",
