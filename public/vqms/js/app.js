@@ -345,5 +345,6 @@ function hidePromo() {
 
 function showPromo() {        
   document.querySelector('.promos').classList.remove('hidden');     
+  document.querySelector('.skipline').classList.add('hidden');     
 }
      
