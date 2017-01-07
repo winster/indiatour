@@ -726,6 +726,39 @@ function sendGenericMessage(recipientId) {
   callSendAPI(messageData);
 }
 
+function sendRestaurants(recipientId) {
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      attachment: {
+        type: "template",
+        payload: {
+          template_type: "generic",
+          elements: [{
+            title: "A2B",
+            subtitle: "Adyar-ananda-bhavan",
+            item_url: "https://indiatour.herokuapp.com/restaurant/a2b",               
+            image_url: "https://media-cdn.tripadvisor.com/media/photo-s/09/5e/88/04/a2b-adyar-ananda-bhavan.jpg",
+            buttons: [{
+              type: "web_url",
+              url: "https://indiatour.herokuapp.com/restaurant/a2b",
+              title: "More Images"
+            }, {
+              type: "postback",
+              title: "Reviews",
+              payload: "Payload for first bubble",
+            }],
+          }]
+        }
+      }
+    }
+  };  
+
+  callSendAPI(messageData);
+}
+
 /*
  * Send a receipt message using the Send API.
  *
@@ -1059,7 +1092,11 @@ const actions = {
       // Yay, we found our recipient!
       // Let's forward our bot response to her.
       // We return a promise to let our bot know when we're done sending
-      sendFBTextMessage(recipientId, text);
+      if(text.indexOf('restaurant')) {
+          sendRestaurants(recipientId);
+      } else {
+          sendFBTextMessage(recipientId, text);
+      } 
       return new Promise(function(resolve, reject) {
         console.log('inside send callback promise::', text);
         return resolve();
@@ -1090,7 +1127,7 @@ const actions = {
       var origin = firstEntityValue(entities, 'origin')
       var destination = firstEntityValue(entities, 'destination')
       if (destination && origin) {
-        context.restaurants = 'A2B from '+origin+' to '+destination; // we should call a Google places API here
+        context.restaurants = 'A2B restaurant from '+origin+' to '+destination; // we should call a Google places API here
         delete context.missingLocation;
       } else {
         context.missingLocation = true;
