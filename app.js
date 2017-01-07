@@ -1090,7 +1090,7 @@ const actions = {
       var origin = firstEntityValue(entities, 'origin')
       var destination = firstEntityValue(entities, 'destination')
       if (location && origin) {
-        context.restaurants = 'A2B from '+origin+' to '+location; // we should call a Google places API here
+        context.restaurants = 'A2B from '+origin+' to '+destination; // we should call a Google places API here
         delete context.missingLocation;
       } else {
         context.missingLocation = true;
